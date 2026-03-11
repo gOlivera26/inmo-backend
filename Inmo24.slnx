@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/tests/">
+    <Project Path="tests/Inmo24.Tests/Inmo24.Tests.csproj" />
+  </Folder>
+  <Project Path="Inmo24.API/Inmo24.API.csproj" />
+  <Project Path="Inmo24.Application/Inmo24.Application.csproj" />
+  <Project Path="Inmo24.Domain/Inmo24.Domain.csproj" />
+</Solution>

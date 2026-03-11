@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  inmo24-api:
+    container_name: inmo24-api
+    build:
+      context: .
+      dockerfile: Inmo24.API/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Host=inmo-postgres;Database=inmobiliaria_saas;Username=postgres;Password=ADMIN1234
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
+      - OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=http://loki:3100/otlp/v1/logs
+      - OTEL_EXPORTER_OTLP_LOGS_PROTOCOL=http/protobuf
+      - OTEL_SERVICE_NAME=Inmo24-API
+      - OTEL_RESOURCE_ATTRIBUTES=deployment.environment=development,service.name=Inmo24-API
+      - TZ=America/Argentina/Cordoba
+    depends_on:
+      inmo-postgres:
+        condition: service_healthy
+      loki:
+        condition: service_started
+      tempo:
+        condition: service_started
+    networks:
+      - backendtemplate-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  inmo-postgres:
+    image: pgvector/pgvector:pg16
+    container_name: inmo-postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=ADMIN1234
+      - POSTGRES_DB=inmobiliaria_saas
+    volumes:
+      - inmo_postgres_data:/var/lib/postgresql/data
+    networks:
+      - backendtemplate-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus-config.yaml:/etc/prometheus/prometheus.yml
+    networks:
+      - backendtemplate-net
+
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: loki
+    user: "0"
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./observability/loki-config.yaml:/etc/loki/local-config.yaml
+      - loki-data:/loki
+    networks:
+      - backendtemplate-net
+
+  tempo:
+    image: grafana/tempo:2.4.1
+    container_name: tempo
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./observability/tempo-config.yaml:/etc/tempo.yaml
+    ports:
+      - "3200:3200"
+      - "4317:4317"
+    networks:
+      - backendtemplate-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+    volumes:
+      - ./observability/grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+    depends_on:
+      - prometheus
+      - loki
+      - tempo
+    networks:
+      - backendtemplate-net
+
+volumes:
+  inmo_postgres_data:
+  loki-data:
+
+networks:
+  backendtemplate-net:
+    driver: bridge

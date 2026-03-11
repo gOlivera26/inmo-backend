@@ -1,0 +1,23 @@
+global using System;
+global using System.Collections.Generic;
+global using System.Collections.Concurrent;
+global using System.Linq;
+global using System.Text.Json;
+global using System.Threading.Tasks;
+global using AutoMapper;
+global using Inmo24.Application.ResponseDto.Common;
+global using Inmo24.Application.Utilities;
+global using Inmo24.Domain.Auditable;
+global using Inmo24.Domain.Models;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Caching.Memory;
+global using Inmo24.Application.ResponseDto.Auth;
+global using System.IdentityModel.Tokens.Jwt;
+global using System.Security.Claims;
+global using System.Text;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.IdentityModel.Tokens;
+global using System.ComponentModel.DataAnnotations;
+global using Inmo24.Application.RequestDto.Auth;
+

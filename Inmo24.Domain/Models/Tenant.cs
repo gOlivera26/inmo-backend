@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Inmo24.Domain.Models;
 
-public partial class Tenant
+public partial class Tenant : IAuditableEntity, IFullAuditableEntity
 {
     public Guid Id { get; set; }
 
@@ -39,13 +39,21 @@ public partial class Tenant
 
     public string MotivoBaja { get; set; }
 
+    public string? InstanciaWa { get; set; }
+
+    public virtual BotConfiguracion BotConfiguracion { get; set; }
+
     public virtual ICollection<Cliente> Clientes { get; set; } = new List<Cliente>();
 
     public virtual ICollection<Contrato> Contratos { get; set; } = new List<Contrato>();
 
+    public virtual ICollection<DocumentosAdjunto> DocumentosAdjuntos { get; set; } = new List<DocumentosAdjunto>();
+
     public virtual ICollection<Propiedades> Propiedades { get; set; } = new List<Propiedades>();
 
     public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+
+    public virtual ICollection<Venta> Venta { get; set; } = new List<Venta>();
 
     public virtual ICollection<Visita> Visita { get; set; } = new List<Visita>();
 

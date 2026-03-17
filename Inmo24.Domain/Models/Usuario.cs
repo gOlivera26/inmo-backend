@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Inmo24.Domain.Models;
 
-public partial class Usuario
+public partial class Usuario : IAuditableEntity, IFullAuditableEntity, ITenantEntity
 {
     public Guid Id { get; set; }
 

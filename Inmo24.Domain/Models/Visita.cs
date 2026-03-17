@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Inmo24.Domain.Models;
 
-public partial class Visita
+public partial class Visita : IAuditableEntity, IFullAuditableEntity, ITenantEntity
 {
     public Guid Id { get; set; }
 

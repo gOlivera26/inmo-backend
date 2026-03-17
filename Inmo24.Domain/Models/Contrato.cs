@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Inmo24.Domain.Models;
 
-public partial class Contrato
+public partial class Contrato : IAuditableEntity, IFullAuditableEntity, ITenantEntity
 {
     public Guid Id { get; set; }
 
@@ -15,9 +15,9 @@ public partial class Contrato
 
     public Guid InquilinoId { get; set; }
 
-    public DateOnly FechaInicio { get; set; }
+    public DateTime FechaInicio { get; set; }
 
-    public DateOnly FechaFin { get; set; }
+    public DateTime FechaFin { get; set; }
 
     public decimal MontoMensual { get; set; }
 

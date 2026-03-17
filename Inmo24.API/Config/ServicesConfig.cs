@@ -1,5 +1,6 @@
 ﻿using Inmo24.Application;
 using Inmo24.Application.Services.Implementations;
+using Inmo24.Application.Services.Interfaces;
 using Inmo24.Domain.Models;
 using System.Text.Json.Serialization;
 
@@ -188,6 +189,18 @@ public static class ServicesConfig
     {
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IPropiedadService, PropiedadesService>();
+        services.AddScoped<IStorageService, CloudflareR2StorageService>();
+        services.AddScoped<ICatalogoService, CatalogoService>();
+        services.AddScoped<IDashboardService, DashboardService>();
+        services.AddScoped<IOperacionComercialService, OperacionComercialService>();
+        services.AddScoped<IClienteService, ClienteService>();
+        services.AddScoped<IDocumentosService, DocumentosService>();
+        services.AddScoped<IVisitaService, VisitaService>();
+        services.AddScoped<IMensajeService, MensajeService>();
+        services.AddScoped<IUsuarioService, UsuarioService>();
+        services.AddScoped<IInmobiliariaService, InmobiliariaService>();
+        services.AddScoped<IZonaService, ZonaService>();
+        services.AddScoped<IBotConfigService, BotConfigService>();
     }
 
     private static void BindAppSettings(this IServiceCollection services, IConfiguration configuration)

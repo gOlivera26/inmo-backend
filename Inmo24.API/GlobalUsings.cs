@@ -1,5 +1,4 @@
-﻿// Inmo24.API Global Usings
-global using System;
+﻿global using System;
 global using System.Collections.Generic;
 global using System.Linq;
 global using System.Reflection;
@@ -28,3 +27,8 @@ global using OpenTelemetry.Resources;
 global using OpenTelemetry.Trace;
 global using Swashbuckle.AspNetCore.Swagger;
 global using Swashbuckle.AspNetCore.SwaggerUI;
+global using Inmo24.Application.RequestDto.Propiedades;
+global using Inmo24.Application.ResponseDto.Propiedades;
+global using Inmo24.Application.Services.Implementations;
+global using Inmo24.Domain.Models;
+global using Inmo24.Application.Services.Interfaces;

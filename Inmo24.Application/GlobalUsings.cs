@@ -20,4 +20,8 @@ global using Microsoft.Extensions.Configuration;
 global using Microsoft.IdentityModel.Tokens;
 global using System.ComponentModel.DataAnnotations;
 global using Inmo24.Application.RequestDto.Auth;
-
+global using Inmo24.Application.RequestDto.Propiedades;
+global using Inmo24.Application.ResponseDto.Propiedades;
+global using Amazon.S3;
+global using Amazon.S3.Model;
+global using Inmo24.Application.Services.Interfaces;

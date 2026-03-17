@@ -2,8 +2,11 @@
 
 public class PropiedadCreateRequestDto
 {
-    [Required]
     public string Codigo { get; set; } = string.Empty; // Ej: CASA001
+
+    [Required]
+    [MaxLength(255)]
+    public string Titulo { get; set; } = string.Empty; 
 
     public int? ZonaId { get; set; }
 
@@ -26,4 +29,10 @@ public class PropiedadCreateRequestDto
 
     public string? DescripcionBreve { get; set; }
     public string? Descripcion { get; set; }
+
+    public decimal? SuperficieTotal { get; set; }
+    public decimal? SuperficieCubierta { get; set; }
+    public short? Antiguedad { get; set; }
+    public bool Destacada { get; set; }
+    public bool NotificarLeads { get; set; }
 }

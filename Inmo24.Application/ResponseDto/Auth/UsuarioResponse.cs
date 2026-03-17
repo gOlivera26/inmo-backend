@@ -9,4 +9,5 @@ public class UsuarioResponse
     public string Rol { get; set; } = string.Empty;
     public string TenantNombre { get; set; } = string.Empty;
     public string TenantPlan { get; set; } = string.Empty;
+    public string? AvatarUrl { get; set; }
 }

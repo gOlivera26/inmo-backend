@@ -5,15 +5,22 @@ public class PropiedadPublicaDto
     public Guid Id { get; set; }
     public string Codigo { get; set; } = string.Empty;
     public string Direccion { get; set; } = string.Empty;
-    public string ZonaNombre { get; set; } = string.Empty; // AutoMapper lo saca de Zona.Nombre
+    public string ZonaNombre { get; set; } = string.Empty;
     public string Tipo { get; set; } = string.Empty;
     public string Operacion { get; set; } = string.Empty;
-    public decimal? PrecioUsd { get; set; }
-    public decimal? PrecioArs { get; set; }
+    public double? PrecioUsd { get; set; }
+    public double? PrecioArs { get; set; }
     public string Moneda { get; set; } = string.Empty;
-    public short? Dormitorios { get; set; }
-    public string? DescripcionBreve { get; set; }
-
+    public int? Ambientes { get; set; }
+    public int? Dormitorios { get; set; }
+    public int? Banios { get; set; }
+    public double? SuperficieTotal { get; set; }
+    public double? SuperficieCubierta { get; set; }
+    public int? Antiguedad { get; set; }
+    public string Descripcion { get; set; } = string.Empty;
+    public string DescripcionBreve { get; set; } = string.Empty;
     public string InmobiliariaNombre { get; set; } = string.Empty;
     public string InmobiliariaTelefono { get; set; } = string.Empty;
+    public string Titulo { get; set; } = string.Empty;
+    public string ImagenPrincipalUrl { get; set; } = string.Empty;
 }

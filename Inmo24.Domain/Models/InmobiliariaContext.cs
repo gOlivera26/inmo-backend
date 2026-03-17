@@ -13,13 +13,19 @@ public partial class InmobiliariaContext : DbContext
     {
     }
 
+    public virtual DbSet<BotConfiguracion> BotConfiguracions { get; set; }
+
     public virtual DbSet<Cliente> Clientes { get; set; }
 
     public virtual DbSet<Contrato> Contratos { get; set; }
 
+    public virtual DbSet<DocumentosAdjunto> DocumentosAdjuntos { get; set; }
+
     public virtual DbSet<EstadosComerciale> EstadosComerciales { get; set; }
 
     public virtual DbSet<FasesCarga> FasesCargas { get; set; }
+
+    public virtual DbSet<N8nChatHistorialBot> N8nChatHistorialBots { get; set; }
 
     public virtual DbSet<Pago> Pagos { get; set; }
 
@@ -37,6 +43,8 @@ public partial class InmobiliariaContext : DbContext
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
 
+    public virtual DbSet<Venta> Ventas { get; set; }
+
     public virtual DbSet<Visita> Visitas { get; set; }
 
     public virtual DbSet<Zona> Zonas { get; set; }
@@ -47,6 +55,64 @@ public partial class InmobiliariaContext : DbContext
             .HasPostgresExtension("pgcrypto")
             .HasPostgresExtension("uuid-ossp")
             .HasPostgresExtension("vector");
+
+        modelBuilder.Entity<BotConfiguracion>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("bot_configuracion_pkey");
+
+            entity.ToTable("bot_configuracion");
+
+            entity.HasIndex(e => e.TenantId, "uk_bot_configuracion_tenant").IsUnique();
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Activo)
+                .HasDefaultValue(true)
+                .HasColumnName("activo");
+            entity.Property(e => e.CreadoEl)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("creado_el");
+            entity.Property(e => e.CreadoPor)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasDefaultValueSql("'sistema'::character varying")
+                .HasColumnName("creado_por");
+            entity.Property(e => e.DirectricesExtra).HasColumnName("directrices_extra");
+            entity.Property(e => e.EliminadoEl).HasColumnName("eliminado_el");
+            entity.Property(e => e.EliminadoPor)
+                .HasMaxLength(255)
+                .HasColumnName("eliminado_por");
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
+            entity.Property(e => e.ModificadoEl).HasColumnName("modificado_el");
+            entity.Property(e => e.ModificadoPor)
+                .HasMaxLength(255)
+                .HasColumnName("modificado_por");
+            entity.Property(e => e.MotivoBaja).HasColumnName("motivo_baja");
+            entity.Property(e => e.NombreBot)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasDefaultValueSql("'InnoBot'::character varying")
+                .HasColumnName("nombre_bot");
+            entity.Property(e => e.SaludoInicial)
+                .IsRequired()
+                .HasDefaultValueSql("'Hola buenas ✌🏼 Soy {NombreBot} de {NombreInmobiliaria}, tu inmobiliaria de confianza. ¿En qué puedo ayudarte hoy?'::text")
+                .HasColumnName("saludo_inicial");
+            entity.Property(e => e.TelefonoDerivacion)
+                .HasMaxLength(50)
+                .HasColumnName("telefono_derivacion");
+            entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+            entity.Property(e => e.TonoConversacion)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasDefaultValueSql("'Argentino, amable, profesional.'::character varying")
+                .HasColumnName("tono_conversacion");
+
+            entity.HasOne(d => d.Tenant).WithOne(p => p.BotConfiguracion)
+                .HasForeignKey<BotConfiguracion>(d => d.TenantId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("bot_configuracion_tenant_id_fkey");
+        });
 
         modelBuilder.Entity<Cliente>(entity =>
         {
@@ -177,6 +243,79 @@ public partial class InmobiliariaContext : DbContext
                 .HasConstraintName("contratos_tenant_id_fkey");
         });
 
+        modelBuilder.Entity<DocumentosAdjunto>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("documentos_adjuntos_pkey");
+
+            entity.ToTable("documentos_adjuntos");
+
+            entity.HasIndex(e => new { e.TenantId, e.ClienteId }, "idx_documentos_adjuntos_cliente");
+
+            entity.HasIndex(e => e.EntidadReferenciaId, "idx_documentos_adjuntos_referencia");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("uuid_generate_v4()")
+                .HasColumnName("id");
+            entity.Property(e => e.Categoria)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("categoria");
+            entity.Property(e => e.ClienteId).HasColumnName("cliente_id");
+            entity.Property(e => e.CreadoEl)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("creado_el");
+            entity.Property(e => e.CreadoPor)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasDefaultValueSql("'sistema'::character varying")
+                .HasColumnName("creado_por");
+            entity.Property(e => e.EliminadoEl).HasColumnName("eliminado_el");
+            entity.Property(e => e.EliminadoPor)
+                .HasMaxLength(255)
+                .HasColumnName("eliminado_por");
+            entity.Property(e => e.EntidadReferenciaId).HasColumnName("entidad_referencia_id");
+            entity.Property(e => e.Estado)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasDefaultValueSql("'Pendiente'::character varying")
+                .HasColumnName("estado");
+            entity.Property(e => e.Extension)
+                .IsRequired()
+                .HasMaxLength(20)
+                .HasColumnName("extension");
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
+            entity.Property(e => e.ModificadoEl).HasColumnName("modificado_el");
+            entity.Property(e => e.ModificadoPor)
+                .HasMaxLength(255)
+                .HasColumnName("modificado_por");
+            entity.Property(e => e.MotivoBaja).HasColumnName("motivo_baja");
+            entity.Property(e => e.NombreArchivo)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("nombre_archivo");
+            entity.Property(e => e.TamanioBytes).HasColumnName("tamanio_bytes");
+            entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+            entity.Property(e => e.TipoEntidad)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnName("tipo_entidad");
+            entity.Property(e => e.Url)
+                .IsRequired()
+                .HasColumnName("url");
+
+            entity.HasOne(d => d.Cliente).WithMany(p => p.DocumentosAdjuntos)
+                .HasForeignKey(d => d.ClienteId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_documentos_adjuntos_cliente");
+
+            entity.HasOne(d => d.Tenant).WithMany(p => p.DocumentosAdjuntos)
+                .HasForeignKey(d => d.TenantId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("fk_documentos_adjuntos_tenant");
+        });
+
         modelBuilder.Entity<EstadosComerciale>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("estados_comerciales_pkey");
@@ -208,6 +347,25 @@ public partial class InmobiliariaContext : DbContext
                 .IsRequired()
                 .HasMaxLength(50)
                 .HasColumnName("nombre");
+        });
+
+        modelBuilder.Entity<N8nChatHistorialBot>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("n8n_chat_historial_bot_pkey");
+
+            entity.ToTable("n8n_chat_historial_bot");
+
+            entity.HasIndex(e => e.SessionId, "idx_n8n_chat_historial_bot_session_id");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Message)
+                .IsRequired()
+                .HasColumnType("jsonb")
+                .HasColumnName("message");
+            entity.Property(e => e.SessionId)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasColumnName("session_id");
         });
 
         modelBuilder.Entity<Pago>(entity =>
@@ -435,6 +593,9 @@ public partial class InmobiliariaContext : DbContext
                 .HasColumnName("superficie_total");
             entity.Property(e => e.TenantId).HasColumnName("tenant_id");
             entity.Property(e => e.TipoId).HasColumnName("tipo_id");
+            entity.Property(e => e.Titulo)
+                .HasMaxLength(255)
+                .HasColumnName("titulo");
             entity.Property(e => e.ZonaId).HasColumnName("zona_id");
 
             entity.HasOne(d => d.Agente).WithMany(p => p.Propiedades)
@@ -526,6 +687,9 @@ public partial class InmobiliariaContext : DbContext
             entity.Property(e => e.Telefono)
                 .HasMaxLength(30)
                 .HasColumnName("telefono");
+            entity.Property(e => e.InstanciaWa)
+                 .HasColumnName("instancia_wa");
+
         });
 
         modelBuilder.Entity<TiposOperacion>(entity =>
@@ -627,6 +791,75 @@ public partial class InmobiliariaContext : DbContext
                 .HasForeignKey(d => d.TenantId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("usuarios_tenant_id_fkey");
+        });
+
+        modelBuilder.Entity<Venta>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("ventas_pkey");
+
+            entity.ToTable("ventas");
+
+            entity.HasIndex(e => e.PropiedadId, "idx_ventas_propiedad");
+
+            entity.HasIndex(e => new { e.TenantId, e.FechaVenta }, "idx_ventas_tenant_fecha");
+
+            entity.Property(e => e.Id)
+                .HasDefaultValueSql("uuid_generate_v4()")
+                .HasColumnName("id");
+            entity.Property(e => e.ComisionInmobiliaria)
+                .HasPrecision(14, 2)
+                .HasColumnName("comision_inmobiliaria");
+            entity.Property(e => e.CompradorId).HasColumnName("comprador_id");
+            entity.Property(e => e.CreadoEl)
+                .HasDefaultValueSql("now()")
+                .HasColumnName("creado_el");
+            entity.Property(e => e.CreadoPor)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasDefaultValueSql("'sistema'::character varying")
+                .HasColumnName("creado_por");
+            entity.Property(e => e.EliminadoEl).HasColumnName("eliminado_el");
+            entity.Property(e => e.EliminadoPor)
+                .HasMaxLength(255)
+                .HasColumnName("eliminado_por");
+            entity.Property(e => e.Escribania)
+                .HasMaxLength(255)
+                .HasColumnName("escribania");
+            entity.Property(e => e.FechaVenta).HasColumnName("fecha_venta");
+            entity.Property(e => e.IsDeleted)
+                .HasDefaultValue(false)
+                .HasColumnName("is_deleted");
+            entity.Property(e => e.ModificadoEl).HasColumnName("modificado_el");
+            entity.Property(e => e.ModificadoPor)
+                .HasMaxLength(255)
+                .HasColumnName("modificado_por");
+            entity.Property(e => e.Moneda)
+                .IsRequired()
+                .HasMaxLength(10)
+                .HasDefaultValueSql("'USD'::character varying")
+                .HasColumnName("moneda");
+            entity.Property(e => e.MontoTotal)
+                .HasPrecision(14, 2)
+                .HasColumnName("monto_total");
+            entity.Property(e => e.MotivoBaja).HasColumnName("motivo_baja");
+            entity.Property(e => e.Notas).HasColumnName("notas");
+            entity.Property(e => e.PropiedadId).HasColumnName("propiedad_id");
+            entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+            entity.HasOne(d => d.Comprador).WithMany(p => p.Venta)
+                .HasForeignKey(d => d.CompradorId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("ventas_comprador_id_fkey");
+
+            entity.HasOne(d => d.Propiedad).WithMany(p => p.Venta)
+                .HasForeignKey(d => d.PropiedadId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("ventas_propiedad_id_fkey");
+
+            entity.HasOne(d => d.Tenant).WithMany(p => p.Venta)
+                .HasForeignKey(d => d.TenantId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("ventas_tenant_id_fkey");
         });
 
         modelBuilder.Entity<Visita>(entity =>

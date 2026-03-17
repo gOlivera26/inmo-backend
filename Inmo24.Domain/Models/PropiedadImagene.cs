@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Inmo24.Domain.Models;
 
-public partial class PropiedadImagene
+public partial class PropiedadImagene : IAuditableEntity, IFullAuditableEntity
 {
     public Guid Id { get; set; }
 

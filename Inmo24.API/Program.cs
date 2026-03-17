@@ -1,8 +1,3 @@
-﻿using Inmo24.API.Config;
-using Inmo24.API.Middlewares;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddConfig(builder.Configuration);

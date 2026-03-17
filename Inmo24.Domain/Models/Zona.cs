@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Inmo24.Domain.Models;
 
-public partial class Zona
+public partial class Zona : IAuditableEntity, IFullAuditableEntity, ITenantEntity
 {
     public int Id { get; set; }
 

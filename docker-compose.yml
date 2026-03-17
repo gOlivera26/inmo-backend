@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   inmo24-api:
     container_name: inmo24-api

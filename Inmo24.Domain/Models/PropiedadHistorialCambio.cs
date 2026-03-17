@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Inmo24.Domain.Models;
 
-public partial class PropiedadHistorialCambio
+public partial class PropiedadHistorialCambio 
 {
     public Guid Id { get; set; }
 

@@ -39,6 +39,11 @@ public class JwtService : BaseService, IJwtService
             new("TenantPlan", usuario.Tenant.Plan)
         };
 
+        if (!string.IsNullOrEmpty(usuario.AvatarUrl))
+        {
+            claims.Add(new Claim("AvatarUrl", usuario.AvatarUrl));
+        }
+
         var token = ReturnToken(
             new ClaimsIdentity(claims),
             _configuration["Jwt:Audience"]!,
@@ -62,7 +67,8 @@ public class JwtService : BaseService, IJwtService
             NombreCompleto = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "NombreCompleto")?.Value ?? string.Empty,
             Rol = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "Rol")?.Value ?? string.Empty,
             TenantNombre = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "TenantNombre")?.Value ?? string.Empty,
-            TenantPlan = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "TenantPlan")?.Value ?? string.Empty
+            TenantPlan = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "TenantPlan")?.Value ?? string.Empty,
+            AvatarUrl = jwtSecurityToken.Claims.FirstOrDefault(x => x.Type == "AvatarUrl")?.Value
         };
 
         return Ok(dataToken);

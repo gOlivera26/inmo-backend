@@ -19,6 +19,10 @@
    "T4TemplatePath": null,
    "Tables": [
       {
+         "Name": "public.bot_configuracion",
+         "ObjectType": 0
+      },
+      {
          "Name": "public.clientes",
          "ObjectType": 0
       },
@@ -27,11 +31,19 @@
          "ObjectType": 0
       },
       {
+         "Name": "public.documentos_adjuntos",
+         "ObjectType": 0
+      },
+      {
          "Name": "public.estados_comerciales",
          "ObjectType": 0
       },
       {
          "Name": "public.fases_carga",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.n8n_chat_historial_bot",
          "ObjectType": 0
       },
       {
@@ -64,6 +76,10 @@
       },
       {
          "Name": "public.usuarios",
+         "ObjectType": 0
+      },
+      {
+         "Name": "public.ventas",
          "ObjectType": 0
       },
       {

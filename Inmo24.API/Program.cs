@@ -1,4 +1,4 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddConfig(builder.Configuration);
 builder.Services.AddOpenTelemetryTracing(builder.Configuration);
@@ -29,3 +29,5 @@ app.MapControllers();
 app.MapHealthChecks("/health");
 
 app.Run();
+
+public partial class Program { }

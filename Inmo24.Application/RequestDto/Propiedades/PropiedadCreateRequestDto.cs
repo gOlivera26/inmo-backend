@@ -6,7 +6,7 @@ public class PropiedadCreateRequestDto
 
     [Required]
     [MaxLength(255)]
-    public string Titulo { get; set; } = string.Empty; 
+    public string Titulo { get; set; } = string.Empty;
 
     public int? ZonaId { get; set; }
 
@@ -18,21 +18,21 @@ public class PropiedadCreateRequestDto
 
     [Required]
     public short OperacionId { get; set; }
-
     public decimal? PrecioUsd { get; set; }
     public decimal? PrecioArs { get; set; }
     public string Moneda { get; set; } = "USD";
-
     public short? Ambientes { get; set; }
     public short? Dormitorios { get; set; }
     public short? Banios { get; set; }
-
     public string? DescripcionBreve { get; set; }
     public string? Descripcion { get; set; }
-
     public decimal? SuperficieTotal { get; set; }
     public decimal? SuperficieCubierta { get; set; }
     public short? Antiguedad { get; set; }
     public bool Destacada { get; set; }
     public bool NotificarLeads { get; set; }
+    public string? VideoUrl { get; set; }
+    public double? Latitud { get; set; }
+    public double? Longitud { get; set; }
+    public short? Cocheras { get; set; }
 }

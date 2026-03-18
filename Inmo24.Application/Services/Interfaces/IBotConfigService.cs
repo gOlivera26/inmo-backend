@@ -8,4 +8,6 @@ public interface IBotConfigService
     Task<OperationResponse<BotConfigResponseDto>> ActualizarConfiguracionAsync(BotConfigUpdateRequestDto request);
     Task<OperationResponse<BotPromptActivoDto>> ObtenerPromptActivoParaN8nAsync(Guid tenantId);
     Task<OperationResponse<BotPromptActivoDto>> ObtenerConfiguracionPorInstanciaAsync(string instanceName);
+    Task<OperationResponse<bool>> RegistrarLeadAsync(BotLeadRequestDto request);
+    Task<OperationResponse<List<string>>> ObtenerImagenesPropiedadBotAsync(string codigo, Guid tenantId);
 }

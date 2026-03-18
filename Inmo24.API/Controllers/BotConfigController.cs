@@ -31,4 +31,16 @@ public class BotConfigController(IBotConfigService botConfigService) : BaseContr
     [HttpGet("n8n-config/{instanceName}")]
     public async Task<IActionResult> GetConfigByInstance(string instanceName) =>
     Return(await _botConfigService.ObtenerConfiguracionPorInstanciaAsync(instanceName));
+
+    [AllowAnonymous]
+    [HttpPost("registrar-lead")]
+    [ProducesResponseType(typeof(OperationResponse<bool>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> RegistrarLead([FromBody] BotLeadRequestDto request) =>
+        Return(await _botConfigService.RegistrarLeadAsync(request));
+
+    [AllowAnonymous]
+    [HttpGet("propiedad-imagenes/{codigo}")]
+    [ProducesResponseType(typeof(OperationResponse<List<string>>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetImagenesBot(string codigo, [FromQuery] Guid tenantId) =>
+        Return(await _botConfigService.ObtenerImagenesPropiedadBotAsync(codigo, tenantId));
 }

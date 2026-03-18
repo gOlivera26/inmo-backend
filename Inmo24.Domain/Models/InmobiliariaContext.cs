@@ -598,6 +598,13 @@ public partial class InmobiliariaContext : DbContext
                 .HasColumnName("titulo");
             entity.Property(e => e.ZonaId).HasColumnName("zona_id");
 
+            entity.Property(e => e.VideoUrl)
+            .HasColumnName("video_url");
+
+            entity.Property(e => e.Latitud).HasColumnName("latitud");
+            entity.Property(e => e.Longitud).HasColumnName("longitud");
+            entity.Property(e => e.Cocheras).HasColumnName("cocheras");
+
             entity.HasOne(d => d.Agente).WithMany(p => p.Propiedades)
                 .HasForeignKey(d => d.AgenteId)
                 .HasConstraintName("propiedades_agente_id_fkey");

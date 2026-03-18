@@ -31,5 +31,9 @@ public class PropiedadDetalleDto
     public DateTime CreadoEl { get; set; }
     public DateTime? ModificadoEl { get; set; }
     public string Titulo { get; set; } = string.Empty;
+    public string? VideoUrl { get; set; }
+    public double? Latitud { get; set; }
+    public double? Longitud { get; set; }
+    public short? Cocheras { get; set; }
     public List<PropiedadImagenDto> PropiedadImagenes { get; set; } = new();
 }

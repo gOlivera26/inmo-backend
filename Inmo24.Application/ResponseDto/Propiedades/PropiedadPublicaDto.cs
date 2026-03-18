@@ -23,4 +23,8 @@ public class PropiedadPublicaDto
     public string InmobiliariaTelefono { get; set; } = string.Empty;
     public string Titulo { get; set; } = string.Empty;
     public string ImagenPrincipalUrl { get; set; } = string.Empty;
+    public string? VideoUrl { get; set; }
+    public double? Latitud { get; set; }
+    public double? Longitud { get; set; }
+    public short? Cocheras { get; set; }
 }

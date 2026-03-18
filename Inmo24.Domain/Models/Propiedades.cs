@@ -71,6 +71,11 @@ public partial class Propiedades : IAuditableEntity, IFullAuditableEntity, ITena
 
     public string Titulo { get; set; }
 
+    public string VideoUrl { get; set; }
+    public double? Latitud { get; set; }
+    public double? Longitud { get; set; }
+    public short? Cocheras { get; set; }
+
     public virtual Usuario Agente { get; set; }
 
     public virtual ICollection<Contrato> Contratos { get; set; } = new List<Contrato>();

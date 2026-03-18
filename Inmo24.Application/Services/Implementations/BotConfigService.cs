@@ -84,6 +84,75 @@ public class BotConfigService : BaseService, IBotConfigService
         return await ObtenerPromptActivoParaN8nAsync(tenant.Id);
     }
 
+    public async Task<OperationResponse<bool>> RegistrarLeadAsync(BotLeadRequestDto request)
+    {
+
+        var cliente = await _context.Set<Cliente>()
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(c => c.TenantId == request.TenantId && c.Telefono == request.Telefono && !c.IsDeleted);
+
+        if (cliente != null)
+        {
+            if (!string.IsNullOrWhiteSpace(request.Nombre) && request.Nombre != "Cliente WhatsApp")
+                cliente.Nombre = request.Nombre;
+
+            if (!string.IsNullOrWhiteSpace(request.EtapaCrm))
+                cliente.EtapaCrm = request.EtapaCrm;
+
+            if (!string.IsNullOrWhiteSpace(request.Nota))
+            {
+                var notaFormateada = $"{DateTime.UtcNow.AddHours(-3):dd/MM HH:mm}hs - {request.Nota}";
+                cliente.Notas = string.IsNullOrWhiteSpace(cliente.Notas)
+                    ? notaFormateada
+                    : $"{cliente.Notas}\n---\n{notaFormateada}";
+            }
+
+            cliente.ModificadoEl = DateTime.UtcNow;
+            cliente.ModificadoPor = "InnoBot";
+            _context.Set<Cliente>().Update(cliente);
+        }
+        else
+        {
+            cliente = new Cliente
+            {
+                Id = Guid.NewGuid(),
+                TenantId = request.TenantId,
+                Nombre = string.IsNullOrWhiteSpace(request.Nombre) ? "Cliente WhatsApp" : request.Nombre,
+                Telefono = request.Telefono,
+                EtapaCrm = request.EtapaCrm ?? "NEW",
+                Notas = string.IsNullOrWhiteSpace(request.Nota) ? null : $"{DateTime.UtcNow.AddHours(-3):dd/MM HH:mm}hs - {request.Nota}",
+                CreadoEl = DateTime.UtcNow,
+                CreadoPor = "InnoBot",
+                IsDeleted = false
+            };
+            _context.Set<Cliente>().Add(cliente);
+        }
+
+        await _context.SaveChangesAsync();
+        return Ok(true);
+    }
+
+    public async Task<OperationResponse<List<string>>> ObtenerImagenesPropiedadBotAsync(string codigo, Guid tenantId)
+    {
+        var propiedad = await _context.Set<Propiedades>()
+            .IgnoreQueryFilters()
+            .Include(p => p.PropiedadImagenes)
+            .FirstOrDefaultAsync(p => p.Codigo.ToLower() == codigo.ToLower() && p.TenantId == tenantId && !p.IsDeleted);
+
+        if (propiedad == null) return NotFound<List<string>>();
+
+        var imagenes = propiedad.PropiedadImagenes
+            .Where(i => !i.IsDeleted)
+            .OrderByDescending(i => i.EsPrincipal)
+            .ThenBy(i => i.Orden)
+            .Select(i => i.Url)
+            .ToList();
+
+        if (!imagenes.Any()) return NotFound<List<string>>();
+
+        return Ok(imagenes);
+    }
+
     public async Task<OperationResponse<BotPromptActivoDto>> ObtenerPromptActivoParaN8nAsync(Guid tenantId)
     {
         var config = await _context.Set<BotConfiguracion>()
